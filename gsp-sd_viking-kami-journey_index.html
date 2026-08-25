@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSP Flock Abroad &mdash; Z&uuml;rich to Paris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#FAF6EC;
+  --paper:#FFFFFF;
+  --ink:#26241F;
+  --ink-soft:#5b574d;
+  --bordeaux:#8C2F39;
+  --bordeaux-deep:#6E2029;
+  --gold:#B08D3E;
+  --gold-pale:#EFE3C2;
+  --sage:#6f7d5f;
+  --line:#E4DCC8;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(140,47,57,0.05), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(176,141,62,0.08), transparent 45%),
+    var(--parchment);
+  color: var(--ink);
+  font-family:'Inter', sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
+
+/* ===== MASTHEAD ===== */
+.masthead{
+  text-align:center;
+  padding: 44px 20px 22px;
+  border-bottom: 2px solid var(--ink);
+}
+.masthead .kicker-top{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bordeaux);
+  margin-bottom: 10px;
+}
+.masthead h1{
+  font-family:'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(30px, 6vw, 52px);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.masthead h1 span{ color: var(--bordeaux); font-style: italic; font-weight: 500; }
+.masthead .issue{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+.travelers{ margin-top:16px; display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.chip-name{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+
+/* ===== DAY RAIL (horizontal chip nav) ===== */
+.railwrap{
+  position: sticky; top:0; z-index: 40;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+.rail{
+  display:flex; gap:8px;
+  overflow-x:auto;
+  padding: 4px 20px;
+  scrollbar-width: thin;
+}
+.rail::-webkit-scrollbar{ height:5px; }
+.rail::-webkit-scrollbar-thumb{ background: var(--line); border-radius:3px; }
+.chip{
+  flex: 0 0 auto;
+  display:flex; align-items:center; gap:7px;
+  padding: 7px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  cursor:pointer;
+  font-family:'Inter', sans-serif;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space:nowrap;
+  transition: all 0.15s ease;
+}
+.chip:hover{ border-color: var(--bordeaux); color: var(--bordeaux); }
+.chip.active{ background: var(--bordeaux); border-color: var(--bordeaux); color: var(--paper); }
+.chip-num{ font-family:'IBM Plex Mono', monospace; font-size:10px; opacity:0.65; }
+.overview-chip{
+  flex: 0 0 auto;
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--parchment);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.overview-chip.active{ background: var(--gold); border-color: var(--gold); color: var(--ink); }
+
+.rail-main{
+  flex-wrap: wrap;
+  overflow-x: visible;
+  justify-content: center;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.rail-days{
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  padding: 4px 20px 8px;
+  overflow: visible;
+}
+.rail-days .chip{
+  flex: none;
+  white-space: normal;
+  text-align: center;
+  justify-content: center;
+  font-size: 11px;
+  padding: 7px 6px;
+  line-height: 1.3;
+}
+@media (max-width: 900px){
+  .rail-days{ grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 480px){
+  .rail-days{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px){
+  .rail-main{ justify-content: flex-start; }
+}
+
+/* ===== PANELS ===== */
+.stage{ max-width: 900px; margin: 0 auto; padding: 0 20px 100px; }
+.panel{ display:none; padding-top: 40px; }
+.panel.active{ display:block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+.band{
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 44px 40px;
+  margin-top: 4px;
+  color: #fff;
+  box-shadow: 0 14px 34px -14px rgba(0,0,0,0.35);
+}
+.band-icon{
+  position:absolute;
+  right: -30px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events:none;
+}
+.band-content{ position:relative; z-index:2; max-width: 66%; }
+.daynum{
+  font-family:'Fraunces', serif;
+  font-weight:700;
+  font-size: 46px;
+  line-height: 1;
+  opacity: 0.55;
+  margin-bottom: 6px;
+}
+.kicker{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+.band-content h1{
+  font-family:'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(28px, 4.8vw, 42px);
+  margin: 0 0 12px;
+  color: #fff;
+}
+.lede{
+  font-size: 15.5px;
+  opacity: 0.92;
+  max-width: 56ch;
+  line-height:1.6;
+}
+
+.article-body{
+  display:grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 44px;
+  margin-top: 40px;
+}
+.article-body h2{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size: 19px;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.highlights{ list-style:none; margin:0 0 28px; padding:0; display:grid; gap:13px; }
+.highlights li{
+  position:relative; padding-left: 22px;
+  font-size: 14.5px; line-height:1.55;
+}
+.highlights li::before{
+  content:""; position:absolute; left:0; top:7px;
+  width:7px; height:7px; border-radius:50%;
+  background: var(--bordeaux);
+}
+
+.tips{ list-style:none; margin:0 0 16px; padding:0; display:grid; gap:11px; }
+.tips li{
+  font-size: 13.5px; color: var(--ink-soft); line-height:1.5;
+  padding-left: 16px; position:relative;
+}
+.tips li::before{ content:"\2014"; position:absolute; left:0; color: var(--gold); font-size:11px; }
+
+.ticket{
+  margin-top: 24px;
+  border: 1.5px solid var(--bordeaux);
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+  background: var(--paper);
+}
+.ticket-tag{
+  position:absolute; top:-11px; left:16px;
+  background: var(--bordeaux); color: var(--parchment);
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 9.5px; letter-spacing:0.08em; text-transform:uppercase;
+  padding: 3px 10px; border-radius: 10px;
+}
+.ticket h3{ font-family:'Fraunces', serif; font-size:19px; margin: 8px 0 3px; }
+.ticket .tagline{ font-size:12.5px; font-style:italic; color: var(--ink-soft); margin: 0 0 14px; }
+.ticket-grid{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(90px,1fr));
+  gap:10px; border-top: 1px dashed var(--line); padding-top:12px;
+  font-family:'IBM Plex Mono', monospace; font-size: 11.5px;
+}
+.ticket-grid b{ display:block; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color: var(--gold); margin-bottom:3px; }
+
+.callout{
+  border-left: 3px solid var(--gold);
+  background: var(--gold-pale);
+  padding: 13px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height:1.5;
+}
+.callout.alert{ border-left-color: var(--bordeaux); background: #F4E2E1; }
+.callout.alert b{ color: var(--bordeaux-deep); }
+.callout b{ color: var(--ink); }
+
+.panelnav{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--line);
+}
+.navbtn{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--parchment);
+  cursor: pointer;
+}
+.navbtn.ghost{ background: transparent; color: var(--ink-soft); border-color: var(--line); }
+.navbtn:hover{ opacity: 0.85; }
+
+/* ===== OVERVIEW PANEL ===== */
+.hero-overview{
+  text-align:center;
+  padding: 10px 0 30px;
+}
+.hero-overview p{
+  max-width: 56ch; margin: 10px auto 0; color: var(--ink-soft); font-size: 15px;
+}
+.welcome-banner{
+  max-width: 760px;
+  margin: 28px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px -18px rgba(110,32,41,0.4);
+}
+.welcome-svg{ width:100%; height:auto; display:block; }
+.mapbtn{
+  margin-top: 22px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  background: linear-gradient(120deg, #8C2F39, #B08D3E);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -8px rgba(140,47,57,0.5);
+  transition: transform 0.15s ease;
+}
+.mapbtn:hover{ transform: translateY(-2px); }
+.mapchip{ font-weight:600; }
+
+.mapheading{
+  font-family:'Fraunces', serif; font-weight:600; font-size: 30px; margin: 0 0 6px;
+}
+.mapcard{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px 10px;
+  box-shadow: 0 10px 30px -16px rgba(0,0,0,0.2);
+  overflow-x: auto;
+}
+.route-map{ width: 100%; min-width: 640px; height: auto; display:block; }
+.maplegend{
+  display:flex; flex-wrap:wrap; gap: 22px;
+  margin-top: 20px; font-size: 12.5px; color: var(--ink-soft);
+}
+.maplegend-item{ display:flex; align-items:center; gap:8px; }
+.swatch{ display:inline-block; width: 26px; height: 0; border-top: 4px solid var(--bordeaux); }
+.swatch.dashed{ border-top: 3px dashed var(--gold); }
+.swatch.dot{ width:14px; height:14px; border-radius:50%; background: var(--bordeaux); border-top:none; }
+
+/* ===== TRAVELERS PAGE ===== */
+.travelbtn{ background: linear-gradient(120deg, #7A2E44, #E4B84A); margin-left: 12px; }
+.travelchip{ font-weight:600; }
+
+.prayercard{
+  position: relative;
+  text-align:center;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  padding: 34px 40px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #FFFDF8, #F7ECD9);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 34px -18px rgba(140,47,57,0.35);
+}
+.prayer-mark{
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.prayer-text{
+  font-family:'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+.prayer-sign{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bordeaux);
+}
+
+.travelers-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.travelcard{
+  border-radius: 16px;
+  padding: 28px 18px;
+  text-align:center;
+  box-shadow: 0 10px 26px -14px rgba(0,0,0,0.35);
+  transition: transform 0.18s ease;
+}
+.travelcard:hover{ transform: translateY(-4px) scale(1.02); }
+.travelcard-names{
+  font-family:'Fraunces', serif;
+  font-weight: 600;
+  font-size: 21px;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.travelcard-names .amp{
+  font-style: italic;
+  opacity: 0.8;
+  margin: 0 4px;
+  font-weight:500;
+}
+
+@media (max-width: 480px){
+  .prayercard{ padding: 26px 22px; }
+  .prayer-text{ font-size:15.5px; }
+  .travelers-grid{ grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); }
+  .travelbtn{ margin-left:0; margin-top:10px; }
+}
+
+/* ===== GROUP UPDATES ===== */
+.updatesbtn{
+  margin-top: 18px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: 10px 20px;
+  border-radius: 22px;
+  border: 1px solid var(--bordeaux);
+  background: transparent;
+  color: var(--bordeaux);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.updatesbtn:hover{ background: var(--bordeaux); color: #fff; }
+.updateschip{ font-weight:600; }
+
+.countdown-card{
+  max-width: 420px;
+  margin: 0 auto 40px;
+  text-align:center;
+  padding: 40px 30px 34px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #8C2F39, #B08D3E);
+  color: #fff;
+  box-shadow: 0 16px 36px -16px rgba(140,47,57,0.5);
+}
+.countdown-number{
+  font-family:'Fraunces', serif;
+  font-weight: 700;
+  font-size: 76px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.countdown-label{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.92;
+  margin-bottom: 14px;
+}
+.countdown-sub{
+  font-size: 12.5px;
+  opacity: 0.8;
+  border-top: 1px dashed rgba(255,255,255,0.4);
+  padding-top: 12px;
+}
+
+.updates-feed{ max-width: 620px; margin: 0 auto; }
+.update-empty{
+  text-align:center;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 30px 20px;
+}
+
+@media (max-width: 480px){
+  .countdown-number{ font-size: 60px; }
+  .countdown-card{ padding: 32px 22px 28px; }
+}
+.grid-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+}
+.daycard{
+  text-align:left;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--gold);
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 16px 16px 18px;
+  cursor:pointer;
+  display:flex; flex-direction:column; gap:8px;
+  transition: all 0.18s ease;
+  font-family:'Inter', sans-serif;
+  box-shadow: 0 4px 14px -8px rgba(0,0,0,0.15);
+}
+.daycard:hover{ transform: translateY(-4px); box-shadow: 0 12px 24px -10px rgba(0,0,0,0.25); }
+.dc-badge{
+  width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  padding: 7px;
+}
+.dc-badge svg{ width:100%; height:100%; }
+.dc-num{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color: var(--bordeaux); }
+.dc-place{ font-family:'Fraunces', serif; font-weight:600; font-size:18px; color: var(--ink); }
+.dc-date{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color: var(--ink-soft); }
+.dc-tag{
+  align-self:flex-start; margin-top:4px;
+  font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase;
+  padding: 3px 9px; border-radius: 10px; font-weight:600;
+}
+
+.info-grid{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap:16px; margin-top:20px;
+}
+.info-card{
+  border:1px solid var(--line); border-radius:12px; padding:18px 20px; background: var(--paper);
+}
+.info-card h3{ font-family:'Fraunces', serif; font-size:17px; margin:0 0 10px; }
+.info-card ul{ margin:0; padding-left:16px; }
+.info-card li{ font-size:12.5px; color: var(--ink-soft); margin-bottom:4px; line-height:1.5; }
+
+footer.sitefoot{
+  text-align:center; padding: 50px 20px 70px;
+  color: var(--ink-soft); font-size:12px; line-height:1.8;
+  border-top: 1px solid var(--line); margin-top: 50px;
+}
+footer.sitefoot strong{ color: var(--bordeaux); }
+footer.sitefoot .maintainer{ display:inline-block; margin-top:10px; font-size:11px; opacity:0.75; letter-spacing:0.02em; }
+
+@media (max-width: 720px){
+  .band{ padding: 32px 26px; border-radius:16px; }
+  .band-content{ max-width: 100%; }
+  .band-icon{ opacity:0.5; right:-40px; }
+  .band-icon svg{ width:140px; height:140px; }
+  .article-body{ grid-template-columns: 1fr; gap:30px; }
+}
+/* ===================================================================
+   SENIOR-FRIENDLY READABILITY PASS
+   Larger type, more spacing, bigger tap targets throughout.
+   =================================================================== */
+body{ font-size: 17px; line-height: 1.7; }
+
+.masthead{ padding: 52px 20px 26px; }
+.masthead .kicker-top{ font-size: 13.5px; letter-spacing: 0.24em; }
+.masthead h1{ font-size: clamp(34px, 7vw, 60px); }
+.masthead .issue{ font-size: 14.5px; }
+.chip-name{ font-size: 13.5px; padding: 7px 15px; }
+.updatesbtn{ font-size: 14px; padding: 12px 24px; }
+
+.rail-main .chip, .overview-chip{ font-size: 15px; padding: 12px 20px; }
+.rail-days{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.rail-days .chip{ font-size: 14px; padding: 10px 10px; }
+@media (max-width: 480px){
+  .rail-days{ grid-template-columns: repeat(2, 1fr); }
+}
+
+.hero-overview p{ font-size: 18px; line-height: 1.7; }
+.mapbtn{ font-size: 15px; padding: 15px 28px; }
+
+.daynum{ font-size: 56px; }
+.kicker{ font-size: 12.5px; }
+.band-content h1{ font-size: clamp(30px, 5.2vw, 48px); }
+.lede{ font-size: 17px; line-height: 1.7; }
+
+.article-body h2{ font-size: 21px; }
+.highlights li{ font-size: 17px; line-height: 1.65; padding-left: 26px; }
+.highlights li::before{ width:9px; height:9px; top:9px; }
+.tips li{ font-size: 16px; line-height: 1.6; }
+.callout{ font-size: 16px; line-height: 1.6; padding: 16px 20px; }
+
+.ticket{ padding: 22px 24px; }
+.ticket h3{ font-size: 22px; }
+.ticket .tagline{ font-size: 14.5px; }
+.ticket-grid{ font-size: 14px; }
+.ticket-grid b{ font-size: 10.5px; }
+
+.navbtn{ font-size: 13.5px; padding: 13px 22px; }
+
+.mapheading{ font-size: 34px; }
+.mapcard .lede, section .lede{ font-size: 17px; }
+.maplegend{ font-size: 14.5px; gap: 26px; }
+
+.dc-place{ font-size: 20px; }
+.dc-date{ font-size: 12px; }
+.dc-tag{ font-size: 10.5px; padding: 4px 11px; }
+.dc-num{ font-size: 11px; }
+
+.info-card h3{ font-size: 20px; }
+.info-card li{ font-size: 14.5px; line-height: 1.55; }
+
+.prayer-text{ font-size: 19px; line-height: 1.75; }
+.prayer-sign{ font-size: 12px; }
+.travelcard-names{ font-size: 23px; }
+.travelcard{ padding: 32px 18px; }
+
+.countdown-number{ font-size: 88px; }
+.countdown-label{ font-size: 16px; }
+.countdown-sub{ font-size: 14px; }
+.update-empty{ font-size: 15px; }
+
+footer.sitefoot{ font-size: 14.5px; line-height: 2; }
+footer.sitefoot .maintainer{ font-size: 12.5px; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="kicker-top">Guide for the GSP Flock &middot; Viking Freya</div>
+  <h1>Z&uuml;rich <span>to</span> Paris</h1>
+  <div class="issue">A Journal in Sixteen Days &middot; November 8&ndash;23, 2026</div>
+  <div class="travelers">
+    <span class="chip-name">GSP Faithfuls</span>
+    <span class="chip-name">Viking Freya &middot; Nov 2026</span>
+  </div>
+  <button class="updatesbtn" data-goto="updates">&#128226; Group Updates</button>
+</div>
+
+<div class="railwrap">
+  <div class="rail rail-main">
+    <button class="overview-chip active" data-goto="overview">Overview</button>
+    <button class="chip mapchip" data-goto="map">&#128506; Map</button>
+    <button class="chip travelchip" data-goto="travelers">&#10084; Travelers</button>
+    <button class="chip updateschip" data-goto="updates">&#128226; Updates</button>
+    <button class="chip" data-goto="practical">Trip Essentials</button>
+  </div>
+  <div class="rail rail-days" id="rail">
+    <button class="chip" data-goto="day-1"><span class="chip-num">01</span><span class="chip-place">In Transit</span></button>
+<button class="chip" data-goto="day-2"><span class="chip-num">02</span><span class="chip-place">Z&uuml;rich</span></button>
+<button class="chip" data-goto="day-3"><span class="chip-num">03</span><span class="chip-place">Z&uuml;rich & Lucerne</span></button>
+<button class="chip" data-goto="day-4"><span class="chip-num">04</span><span class="chip-place">Basel</span></button>
+<button class="chip" data-goto="day-5"><span class="chip-num">05</span><span class="chip-place">Strasbourg</span></button>
+<button class="chip" data-goto="day-6"><span class="chip-num">06</span><span class="chip-place">Speyer</span></button>
+<button class="chip" data-goto="day-7"><span class="chip-num">07</span><span class="chip-place">Mainz</span></button>
+<button class="chip" data-goto="day-8"><span class="chip-num">08</span><span class="chip-place">Middle Rhine</span></button>
+<button class="chip" data-goto="day-9"><span class="chip-num">09</span><span class="chip-place">Cochem</span></button>
+<button class="chip" data-goto="day-10"><span class="chip-num">10</span><span class="chip-place">Bernkastel & Trier</span></button>
+<button class="chip" data-goto="day-11"><span class="chip-num">11</span><span class="chip-place">Disembark Trier</span></button>
+<button class="chip" data-goto="day-12"><span class="chip-num">12</span><span class="chip-place">Paris</span></button>
+<button class="chip" data-goto="day-13"><span class="chip-num">13</span><span class="chip-place">Iconic Paris</span></button>
+<button class="chip" data-goto="day-14"><span class="chip-num">14</span><span class="chip-place">Historic Paris</span></button>
+<button class="chip" data-goto="day-15"><span class="chip-num">15</span><span class="chip-place">Sacred Paris</span></button>
+<button class="chip" data-goto="day-16"><span class="chip-num">16</span><span class="chip-place">Paris</span></button>
+  </div>
+</div>
+
+<div class="stage">
+
+  <section class="panel active" id="overview" data-tab="overview">
+    <div class="hero-overview">
+      <p>Two recovery days in Z&uuml;rich, a seven-night river cruise down the Rhine and Moselle, and a five-night close in Paris &mdash; sixteen days, one unhurried pace. Tap any day below to open it.</p>
+      <div class="welcome-banner"><svg viewBox="0 0 1200 340" class="welcome-svg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="welcomeSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF3E1"/>
+      <stop offset="55%" stop-color="#F3CE9A"/>
+      <stop offset="100%" stop-color="#D98E82"/>
+    </linearGradient>
+    <radialGradient id="welcomeSun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF3CF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FFF3CF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="340" fill="url(#welcomeSky)"/>
+
+  <circle cx="330" cy="110" r="90" fill="url(#welcomeSun)"/>
+  <circle cx="330" cy="110" r="34" fill="#F4D77E"/>
+
+  <path d="M45 60 L60 40 L75 60" stroke="#6E2029" stroke-width="2.5" fill="none" opacity="0.5"/>
+  <path d="M950 50 L965 32 L980 50" stroke="#6E2029" stroke-width="2.5" fill="none" opacity="0.4"/>
+  <path d="M1040 85 L1055 67 L1070 85" stroke="#6E2029" stroke-width="2.5" fill="none" opacity="0.4"/>
+
+  <polygon points="0,300 90,150 150,230 230,110 320,260 400,180 470,300" fill="#8C2F39" opacity="0.30"/>
+  <polygon points="20,300 130,180 210,260 290,145 380,300" fill="#6E2029" opacity="0.55"/>
+  <polygon points="130,180 150,205 170,180 190,215 155,225" fill="#FDF3E1" opacity="0.6"/>
+  <polygon points="290,145 310,172 330,145 350,178 313,190" fill="#FDF3E1" opacity="0.6"/>
+
+  <rect x="0" y="285" width="1200" height="55" fill="#B08D3E" opacity="0.28"/>
+  <path d="M0 295 Q300 280 600 295 T1200 295" stroke="#3F7CAC" stroke-width="3" fill="none" opacity="0.35"/>
+  <path d="M0 308 Q300 296 600 308 T1200 308" stroke="#3F7CAC" stroke-width="2" fill="none" opacity="0.25"/>
+
+  <g transform="translate(520,222)">
+    <path d="M0 68 Q110 92 220 68 L204 96 Q110 114 16 96 Z" fill="#6E2029"/>
+    <rect x="26" y="34" width="168" height="36" rx="3" fill="#8C2F39"/>
+    <rect x="46" y="10" width="128" height="28" rx="3" fill="#B08D3E"/>
+    <circle cx="60" cy="50" r="5" fill="#FDF3E1" opacity="0.7"/>
+    <circle cx="90" cy="50" r="5" fill="#FDF3E1" opacity="0.7"/>
+    <circle cx="120" cy="50" r="5" fill="#FDF3E1" opacity="0.7"/>
+    <circle cx="150" cy="50" r="5" fill="#FDF3E1" opacity="0.7"/>
+    <rect x="104" y="-22" width="6" height="34" fill="#6E2029"/>
+    <path d="M110 -22 L134 -12 L110 -4 Z" fill="#B08D3E"/>
+  </g>
+
+  <g transform="translate(910,60)">
+    <path d="M40 260 L46 190 L34 190 L40 150 L30 150 L40 90 L32 90 L40 40 L48 40 L56 90 L48 90 L58 150 L48 150 L58 190 L46 190 L52 260 Z" fill="#26241F" opacity="0.82"/>
+    <path d="M6 260 L74 260 L64 232 L16 232 Z" fill="#26241F" opacity="0.82"/>
+    <path d="M18 232 L62 232 L52 190 L28 190 Z" fill="#26241F" opacity="0"/>
+    <circle cx="40" cy="36" r="4" fill="#F4D77E"/>
+  </g>
+
+  <path d="M760 130 q10 -14 20 0" stroke="#6E2029" stroke-width="2" fill="none" opacity="0.45"/>
+  <path d="M800 150 q10 -14 20 0" stroke="#6E2029" stroke-width="2" fill="none" opacity="0.35"/>
+</svg></div>
+      <button class="mapbtn" data-goto="map">&#128506; View the Full Route Map</button>
+      <button class="mapbtn travelbtn" data-goto="travelers">&#10084; Meet the Travelers</button>
+    </div>
+    <div class="grid-cards">
+      <button class="daycard" data-goto="day-1" style="border-top: 5px solid #0B1730;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #0B1730, #2B3A63);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M28 70 L92 46" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 6" fill="none" opacity="0.57"/>
+<path d="M60 40 L96 52 L82 60 L68 56 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M68 56 L58 72 L66 70 L74 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 1</span>
+      <span class="dc-place">In Transit</span>
+      <span class="dc-date">Sun, Nov 8</span>
+      <span class="dc-tag" style="background:#0B173022; color:#0B1730;">Travel Day</span>
+    </button>
+<button class="daycard" data-goto="day-2" style="border-top: 5px solid #1D5C8C;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #1D5C8C, #5FA3C9);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<circle cx="82" cy="42" r="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M22 82 L45 50 L58 66 L74 38 L98 82 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 2</span>
+      <span class="dc-place">Z&uuml;rich, Switzerland</span>
+      <span class="dc-date">Mon, Nov 9</span>
+      <span class="dc-tag" style="background:#1D5C8C22; color:#1D5C8C;">Switzerland</span>
+    </button>
+<button class="daycard" data-goto="day-3" style="border-top: 5px solid #1D5C8C;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #1D5C8C, #5FA3C9);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<circle cx="82" cy="42" r="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M22 82 L45 50 L58 66 L74 38 L98 82 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 3</span>
+      <span class="dc-place">Z&uuml;rich &amp; Lucerne</span>
+      <span class="dc-date">Tue, Nov 10</span>
+      <span class="dc-tag" style="background:#1D5C8C22; color:#1D5C8C;">Switzerland</span>
+    </button>
+<button class="daycard" data-goto="day-4" style="border-top: 5px solid #B5502E;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #B5502E, #E0A548);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M28 78 Q60 92 92 78" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 30 L60 74" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 34 L80 50 L60 58 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 40 L44 52 L60 58 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 4</span>
+      <span class="dc-place">Basel &rarr; Embarkation</span>
+      <span class="dc-date">Wed, Nov 11</span>
+      <span class="dc-tag" style="background:#B5502E22; color:#B5502E;">Embarkation</span>
+    </button>
+<button class="daycard" data-goto="day-5" style="border-top: 5px solid #1F6E6A;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #1F6E6A, #57B0A6);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 5</span>
+      <span class="dc-place">Strasbourg, France</span>
+      <span class="dc-date">Thu, Nov 12</span>
+      <span class="dc-tag" style="background:#1F6E6A22; color:#1F6E6A;">Rhine Port</span>
+    </button>
+<button class="daycard" data-goto="day-6" style="border-top: 5px solid #1F6E6A;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #1F6E6A, #57B0A6);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 6</span>
+      <span class="dc-place">Speyer, Germany</span>
+      <span class="dc-date">Fri, Nov 13</span>
+      <span class="dc-tag" style="background:#1F6E6A22; color:#1F6E6A;">Rhine Port</span>
+    </button>
+<button class="daycard" data-goto="day-7" style="border-top: 5px solid #1F6E6A;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #1F6E6A, #57B0A6);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 7</span>
+      <span class="dc-place">Mainz, Germany</span>
+      <span class="dc-date">Sat, Nov 14</span>
+      <span class="dc-tag" style="background:#1F6E6A22; color:#1F6E6A;">Rhine Port</span>
+    </button>
+<button class="daycard" data-goto="day-8" style="border-top: 5px solid #2B4A73;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #2B4A73, #6C8FB8);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M18 88 Q60 60 102 88" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M70 62 L78 38 L86 62" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M76 38 L76 30" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M20 94 Q60 84 100 94" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 8</span>
+      <span class="dc-place">Middle Rhine, Koblenz &amp; Winningen</span>
+      <span class="dc-date">Sun, Nov 15</span>
+      <span class="dc-tag" style="background:#2B4A7322; color:#2B4A73;">Scenic Sailing</span>
+    </button>
+<button class="daycard" data-goto="day-9" style="border-top: 5px solid #5C2436;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #5C2436, #9E4A5C);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M22 60 L98 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><path d="M22 74 L98 58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><path d="M22 88 L98 72" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M72 44 L80 26 L88 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 9</span>
+      <span class="dc-place">Cochem, Germany</span>
+      <span class="dc-date">Mon, Nov 16</span>
+      <span class="dc-tag" style="background:#5C243622; color:#5C2436;">Moselle</span>
+    </button>
+<button class="daycard" data-goto="day-10" style="border-top: 5px solid #5C2436;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #5C2436, #9E4A5C);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M22 60 L98 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><path d="M22 74 L98 58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><path d="M22 88 L98 72" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M72 44 L80 26 L88 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 10</span>
+      <span class="dc-place">Bernkastel &amp; Trier</span>
+      <span class="dc-date">Tue, Nov 17</span>
+      <span class="dc-tag" style="background:#5C243622; color:#5C2436;">Moselle</span>
+    </button>
+<button class="daycard" data-goto="day-11" style="border-top: 5px solid #6B4A2C;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #6B4A2C, #B08249);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M36 90 L36 40 L48 40 L48 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M72 90 L72 40 L84 40 L84 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M48 90 L48 58 A12 14 0 0 1 72 58 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 11</span>
+      <span class="dc-place">Disembark Trier &rarr; Paris</span>
+      <span class="dc-date">Wed, Nov 18</span>
+      <span class="dc-tag" style="background:#6B4A2C22; color:#6B4A2C;">Transfer Day</span>
+    </button>
+<button class="daycard" data-goto="day-12" style="border-top: 5px solid #7A2E44;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #7A2E44, #C96A6E);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M60 26 L72 92 L64 92 L60 60 L56 92 L48 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M50 70 L70 70 M47 82 L73 82" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 12</span>
+      <span class="dc-place">Paris, France</span>
+      <span class="dc-date">Thu, Nov 19</span>
+      <span class="dc-tag" style="background:#7A2E4422; color:#7A2E44;">Paris</span>
+    </button>
+<button class="daycard" data-goto="day-13" style="border-top: 5px solid #7A2E44;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #7A2E44, #C96A6E);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M60 26 L72 92 L64 92 L60 60 L56 92 L48 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M50 70 L70 70 M47 82 L73 82" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 13</span>
+      <span class="dc-place">Iconic Paris</span>
+      <span class="dc-date">Fri, Nov 20</span>
+      <span class="dc-tag" style="background:#7A2E4422; color:#7A2E44;">Paris</span>
+    </button>
+<button class="daycard" data-goto="day-14" style="border-top: 5px solid #2E2E5C;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #2E2E5C, #6B5FA0);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M40 92 L40 42 L48 34 L48 92" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M72 92 L72 42 L80 34 L80 92" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<circle cx="60" cy="62" r="14" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.95"/>
+<circle cx="60" cy="62" r="6" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 14</span>
+      <span class="dc-place">Historic Paris</span>
+      <span class="dc-date">Sat, Nov 21</span>
+      <span class="dc-tag" style="background:#2E2E5C22; color:#2E2E5C;">Paris</span>
+    </button>
+<button class="daycard" data-goto="day-15" style="border-top: 5px solid #8A5A18;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #8A5A18, #E4B84A);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M34 92 A26 24 0 0 1 86 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<circle cx="60" cy="56" r="14" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M60 42 L60 28" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><path d="M54 32 L66 32" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 15</span>
+      <span class="dc-place">Sacred Paris</span>
+      <span class="dc-date">Sun, Nov 22</span>
+      <span class="dc-tag" style="background:#8A5A1822; color:#8A5A18;">Paris</span>
+    </button>
+<button class="daycard" data-goto="day-16" style="border-top: 5px solid #0B1730;">
+      <span class="dc-badge" style="background: linear-gradient(135deg, #0B1730, #2B3A63);"><svg viewBox="0 0 120 120" width="40" height="40"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.475"/>
+<path d="M28 70 L92 46" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 6" fill="none" opacity="0.57"/>
+<path d="M60 40 L96 52 L82 60 L68 56 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+<path d="M68 56 L58 72 L66 70 L74 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/></svg></span>
+      <span class="dc-num">Day 16</span>
+      <span class="dc-place">Paris &rarr; San Diego</span>
+      <span class="dc-date">Mon, Nov 23</span>
+      <span class="dc-tag" style="background:#0B173022; color:#0B1730;">Travel Day</span>
+    </button>
+    </div>
+  </section>
+
+  <section class="panel" id="updates" data-tab="updates">
+    <h1 class="mapheading">Group Updates</h1>
+    <p class="lede" style="margin-bottom:26px;">The latest news and countdown, in one place &mdash; check back as the trip gets closer.</p>
+
+    <div class="countdown-card">
+      <div class="countdown-number" id="countdown-number">&ndash;</div>
+      <div class="countdown-label" id="countdown-label">days to Z&uuml;rich!</div>
+      <div class="countdown-sub">Departure: Sunday, November 8, 2026</div>
+    </div>
+
+    <div class="updates-feed">
+      <div class="update-empty">No updates posted yet &mdash; check back soon.</div>
+    </div>
+  </section>
+
+  <section class="panel" id="travelers" data-tab="travelers">
+    <h1 class="mapheading">Traveling Together</h1>
+    <p class="lede" style="margin-bottom:26px;">Twelve households, one journey &mdash; from Zürich to Paris, side by side.</p>
+
+    <div class="prayercard">
+      <div class="prayer-mark">&#10013;</div>
+      <p class="prayer-text">Good Shepherd, watch over every mile of this journey. Calm the waters we cross and steady the roads we travel. Bind us closer to one another and to You with each new place we see. Bring us home safely, hearts full and faith renewed.</p>
+      <div class="prayer-sign">&mdash; A Traveler's Blessing</div>
+    </div>
+
+    <div class="travelers-grid">
+      <div class="travelcard" style="background: linear-gradient(135deg, #0B1730, #2B3A63);">
+      <span class="travelcard-names">Yoli <span class="amp">&amp;</span> Manny</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #1D5C8C, #5FA3C9);">
+      <span class="travelcard-names">Nette <span class="amp">&amp;</span> Robert</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #B5502E, #E0A548);">
+      <span class="travelcard-names">Amie <span class="amp">&amp;</span> Lino</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #1F6E6A, #57B0A6);">
+      <span class="travelcard-names">Trina <span class="amp">&amp;</span> Rudy</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #2B4A73, #6C8FB8);">
+      <span class="travelcard-names">Cathy <span class="amp">&amp;</span> Arno</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #5C2436, #9E4A5C);">
+      <span class="travelcard-names">Alet <span class="amp">&amp;</span> Pet</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #6B4A2C, #B08249);">
+      <span class="travelcard-names">Arlene <span class="amp">&amp;</span> Larry</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #7A2E44, #C96A6E);">
+      <span class="travelcard-names">Ilma <span class="amp">&amp;</span> Jaime</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #2E2E5C, #6B5FA0);">
+      <span class="travelcard-names">Lydia</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #8A5A18, #E4B84A);">
+      <span class="travelcard-names">Beth</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #0B1730, #2B3A63);">
+      <span class="travelcard-names">Voie</span>
+    </div>
+<div class="travelcard" style="background: linear-gradient(135deg, #1D5C8C, #5FA3C9);">
+      <span class="travelcard-names">Gerry</span>
+    </div>
+    </div>
+  </section>
+
+  <section class="panel" id="map" data-tab="map">
+    <h1 class="mapheading">The Route</h1>
+    <p class="lede" style="margin-bottom:22px;">Z&uuml;rich to Paris, by boat where it counts. The bold line is the Viking Freya, river-borne from Basel to Trier; the dashed segments are overland &mdash; the pre-cruise transfer to Basel, and the post-cruise run through Reims to Paris.</p>
+    <div class="mapcard">
+      <svg viewBox="0 20 900 560" class="route-map">
+  <defs>
+    <linearGradient id="grad-Zürich" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1D5C8C"/><stop offset="100%" stop-color="#5FA3C9"/>
+    </linearGradient><linearGradient id="grad-Basel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B5502E"/><stop offset="100%" stop-color="#E0A548"/>
+    </linearGradient><linearGradient id="grad-Strasbourg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F6E6A"/><stop offset="100%" stop-color="#57B0A6"/>
+    </linearGradient><linearGradient id="grad-Speyer" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F6E6A"/><stop offset="100%" stop-color="#57B0A6"/>
+    </linearGradient><linearGradient id="grad-Mainz" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F6E6A"/><stop offset="100%" stop-color="#57B0A6"/>
+    </linearGradient><linearGradient id="grad-Koblenz" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2B4A73"/><stop offset="100%" stop-color="#6C8FB8"/>
+    </linearGradient><linearGradient id="grad-Cochem" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5C2436"/><stop offset="100%" stop-color="#9E4A5C"/>
+    </linearGradient><linearGradient id="grad-Bernkastel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5C2436"/><stop offset="100%" stop-color="#9E4A5C"/>
+    </linearGradient><linearGradient id="grad-Trier" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6B4A2C"/><stop offset="100%" stop-color="#B08249"/>
+    </linearGradient><linearGradient id="grad-Reims" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6B4A2C"/><stop offset="100%" stop-color="#B08249"/>
+    </linearGradient><linearGradient id="grad-Paris" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7A2E44"/><stop offset="100%" stop-color="#C96A6E"/>
+    </linearGradient>
+    <linearGradient id="cruiseGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B08D3E"/><stop offset="50%" stop-color="#8C2F39"/><stop offset="100%" stop-color="#6B4A2C"/>
+    </linearGradient>
+  </defs>
+
+  <text x="30" y="54" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="2" fill="#8C2F39">N</text>
+  <path d="M30 60 L30 40 M22 48 L30 38 L38 48" stroke="#8C2F39" stroke-width="1.6" fill="none"/>
+
+  <text x="790" y="70" font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="2" fill="#5b574d" opacity="0.6">SWITZERLAND</text>
+  <text x="580" y="70" font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="2" fill="#5b574d" opacity="0.6">GERMANY</text>
+  <text x="80" y="80" font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="2" fill="#5b574d" opacity="0.6">FRANCE</text>
+
+  <path d="M 830 470 Q 830 470 775.0 450.0 T 720 430" fill="none" stroke="#B08249" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round" opacity="0.75"/>
+  <path d="M 720 430 Q 720 430 670.0 410.0 T 620 390 Q 620 390 595.0 355.0 T 570 320 Q 570 320 547.5 287.5 T 525 255 Q 525 255 492.5 230.0 T 460 205 Q 460 205 420.0 195.0 T 380 185 Q 380 185 340.0 195.0 T 300 205 Q 300 205 260.0 220.0 T 220 235" fill="none" stroke="url(#cruiseGrad)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 220 235 Q 220 235 167.5 182.5 T 115 130 Q 115 130 95.0 235.0 T 75 340" fill="none" stroke="#B08249" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round" opacity="0.75"/>
+
+  
+    <g class="mapstop">
+      <circle cx="830" cy="470" r="23" fill="#1D5C8C" opacity="0.18"/>
+      <circle cx="830" cy="470" r="17" fill="url(#grad-Zürich)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="830" y="474" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">2–3</text>
+      <text x="830" y="505" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Zürich</text>
+      <text x="830" y="519" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Arrival & Lucerne</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="720" cy="430" r="21" fill="#B5502E" opacity="0.18"/>
+      <circle cx="720" cy="430" r="15" fill="url(#grad-Basel)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="720" y="434" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">4</text>
+      <text x="720" y="463" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Basel</text>
+      <text x="720" y="477" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Embark Viking Freya</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="620" cy="390" r="21" fill="#1F6E6A" opacity="0.18"/>
+      <circle cx="620" cy="390" r="15" fill="url(#grad-Strasbourg)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="620" y="394" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">5</text>
+      <text x="620" y="423" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Strasbourg</text>
+      <text x="620" y="437" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Petite France</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="570" cy="320" r="21" fill="#1F6E6A" opacity="0.18"/>
+      <circle cx="570" cy="320" r="15" fill="url(#grad-Speyer)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="570" y="324" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">6</text>
+      <text x="570" y="353" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Speyer</text>
+      <text x="570" y="367" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Kaiserdom</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="525" cy="255" r="21" fill="#1F6E6A" opacity="0.18"/>
+      <circle cx="525" cy="255" r="15" fill="url(#grad-Mainz)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="525" y="259" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">7</text>
+      <text x="525" y="288" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Mainz</text>
+      <text x="525" y="302" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Gutenberg Museum</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="460" cy="205" r="21" fill="#2B4A73" opacity="0.18"/>
+      <circle cx="460" cy="205" r="15" fill="url(#grad-Koblenz)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="460" y="209" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">8</text>
+      <text x="460" y="238" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Koblenz</text>
+      <text x="460" y="252" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Rhine meets Moselle</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="380" cy="185" r="21" fill="#5C2436" opacity="0.18"/>
+      <circle cx="380" cy="185" r="15" fill="url(#grad-Cochem)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="380" y="189" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">9</text>
+      <text x="380" y="218" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Cochem</text>
+      <text x="380" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Reichsburg Castle</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="300" cy="205" r="21" fill="#5C2436" opacity="0.18"/>
+      <circle cx="300" cy="205" r="15" fill="url(#grad-Bernkastel)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="300" y="209" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">10</text>
+      <text x="300" y="238" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Bernkastel</text>
+      <text x="300" y="252" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Medieval Markt</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="220" cy="235" r="21" fill="#6B4A2C" opacity="0.18"/>
+      <circle cx="220" cy="235" r="15" fill="url(#grad-Trier)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="220" y="239" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">10–11</text>
+      <text x="220" y="268" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Trier</text>
+      <text x="220" y="282" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Disembark here</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="115" cy="130" r="23" fill="#6B4A2C" opacity="0.18"/>
+      <circle cx="115" cy="130" r="17" fill="url(#grad-Reims)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="115" y="134" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">11</text>
+      <text x="115" y="165" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Reims</text>
+      <text x="115" y="179" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Day-trip cathedral</text>
+    </g>
+    <g class="mapstop">
+      <circle cx="75" cy="340" r="23" fill="#7A2E44" opacity="0.18"/>
+      <circle cx="75" cy="340" r="17" fill="url(#grad-Paris)" stroke="#FAF6EC" stroke-width="2.5"/>
+      <text x="75" y="344" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="700" fill="#fff">11–16</text>
+      <text x="75" y="375" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="15" fill="#26241F">Paris</text>
+      <text x="75" y="389" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b574d">Extension to Nov 23</text>
+    </g>
+</svg>
+    </div>
+    <div class="maplegend">
+      <div class="maplegend-item"><span class="swatch solid"></span>River cruise &mdash; Viking Freya (Basel &rarr; Trier)</div>
+      <div class="maplegend-item"><span class="swatch dashed"></span>Overland transfer</div>
+      <div class="maplegend-item"><span class="swatch dot"></span>Stop, numbered by day</div>
+    </div>
+  </section>
+
+  <section class="panel" id="day-1" data-tab="day-1">
+  <div class="band" style="background: linear-gradient(120deg, #0B1730, #2B3A63);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M28 70 L92 46" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 6" fill="none" opacity="0.132"/>
+<path d="M60 40 L96 52 L82 60 L68 56 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M68 56 L58 72 L66 70 L74 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">01</div>
+      <div class="kicker">Sun, Nov 8 &middot; Travel Day</div>
+      <h1>In Transit</h1>
+      <p class="lede">The journey begins. An overnight flight carries you from San Diego toward Switzerland &mdash; the first leg of jet lag recovery starts in the air.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>SAN &rarr; DTW &rarr; AMS &rarr; ZRH, arriving the next morning</li>
+<li>Economy class, all segments (Delta / KLM)</li>
+<li>Overnight transatlantic leg &mdash; try to sleep as much as possible</li>
+<li>Connection times: DTW 2h33m, AMS 3h40m outbound</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Pack comfortable layers, a neck pillow, an eye mask, and melatonin if you use it.</li>
+<li>Bring light snacks in case airline meals don't agree with an odd sleep schedule.</li>
+<li>Set your watch to Z&uuml;rich time as soon as you board.</li></ul>
+      <div class="callout "><b>Flight Details:</b> SAN&rarr;DTW DL 754 (6:15A&ndash;1:42P) &middot; DTW&rarr;AMS DL 132 (4:15P&ndash;6:00A+1, overnight) &middot; AMS&rarr;ZRH DL 9437 (9:40A&ndash;11:00A, operated by KLM)</div>
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <span></span>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-2'>Day 2 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-2" data-tab="day-2">
+  <div class="band" style="background: linear-gradient(120deg, #1D5C8C, #5FA3C9);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<circle cx="82" cy="42" r="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M22 82 L45 50 L58 66 L74 38 L98 82 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">02</div>
+      <div class="kicker">Mon, Nov 9 &middot; Switzerland</div>
+      <h1>Z&uuml;rich, Switzerland</h1>
+      <p class="lede">Touchdown in Switzerland. A gentle first day is the whole point &mdash; walk a little, see the lake, and let your body clock start resetting before the busier days ahead.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Arrive Z&uuml;rich Airport (ZRH), transfer to Renaissance Z&uuml;rich Tower Hotel</li>
+<li>Light walking in Z&uuml;rich's Old Town (Altstadt) in the afternoon</li>
+<li>Stroll Bahnhofstrasse, Z&uuml;rich's grand shopping street</li>
+<li>Lake Z&uuml;rich waterfront at sunset</li>
+<li>Easy Swiss dinner nearby, early bedtime</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Resist a long nap &mdash; push through until at least 8 PM local time.</li>
+<li>Switzerland uses Swiss Francs (CHF), not euros.</li>
+<li>Hotel: Renaissance Zürich Tower Hotel, Turbinenstrasse 20, 8005 Zürich.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-1'>&larr; Day 1</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-3'>Day 3 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-3" data-tab="day-3">
+  <div class="band" style="background: linear-gradient(120deg, #1D5C8C, #5FA3C9);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<circle cx="82" cy="42" r="8" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M22 82 L45 50 L58 66 L74 38 L98 82 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">03</div>
+      <div class="kicker">Tue, Nov 10 &middot; Switzerland</div>
+      <h1>Z&uuml;rich &amp; Lucerne</h1>
+      <p class="lede">An included morning on Lake Zürich, then the well-rested version of the Swiss Alps day trip &mdash; Lucerne's Chapel Bridge and Old Town, an hour away by train.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Scenic boat cruise on Lake Zürich with alpine views</li>
+<li>Rathaus (1690), Fraumünster (Chagall windows), Großmünster</li>
+<li>Afternoon: train to Lucerne &mdash; Chapel Bridge (1333), Lion Monument</li>
+<li>Old Town Lucerne &amp; Musegg Wall towers (free to climb)</li>
+<li>Lakeside lunch, return to Zürich in the evening</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Z&uuml;rich Walking Tour &amp; Lake Cruise</h3>
+      <p class="tagline">Immerse yourself in soaring architecture and storybook charm</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>8:00 AM</div>
+        <div><b>End</b>12:00 PM</div>
+        <div><b>Duration</b>4 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>This is a pre-cruise day &mdash; operated from your Zürich hotel, not the ship.</li>
+<li>Bring a warm waterproof jacket; November lake winds are cold.</li>
+<li>Lucerne round-trip train is about 1 hour each way, ~$35 USD round-trip.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-2'>&larr; Day 2</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-4'>Day 4 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-4" data-tab="day-4">
+  <div class="band" style="background: linear-gradient(120deg, #B5502E, #E0A548);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M28 78 Q60 92 92 78" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 30 L60 74" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 34 L80 50 L60 58 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 40 L44 52 L60 58 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">04</div>
+      <div class="kicker">Wed, Nov 11 &middot; Embarkation</div>
+      <h1>Basel &rarr; Embarkation</h1>
+      <p class="lede">A quick tour of Basel's medieval old town, then the moment the river cruise really begins: boarding Viking Freya in the afternoon.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Walking tour of Basel's Old Town &mdash; Marktplatz, Rathaus, Münster</li>
+<li>View of the traditional cable ferry crossing the Rhine</li>
+<li>Embarkation: 3:00 PM in Basel, Switzerland</li>
+<li>Safety drill, welcome reception, first dinner aboard</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Basel Highlights</h3>
+      <p class="tagline">A cultural capital at the intersection of three countries</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>10:15 AM</div>
+        <div><b>End</b>12:45 PM</div>
+        <div><b>Duration</b>2.5 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>This is EMBARKATION DAY &mdash; pack medications, passport, and phone in your day bag.</li>
+<li>Bags are handled by the Viking transfer; eat a good breakfast before checkout.</li>
+<li>Ship departs Basel in the evening and begins sailing the Rhine overnight.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-3'>&larr; Day 3</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-5'>Day 5 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-5" data-tab="day-5">
+  <div class="band" style="background: linear-gradient(120deg, #1F6E6A, #57B0A6);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">05</div>
+      <div class="kicker">Thu, Nov 12 &middot; Rhine Port</div>
+      <h1>Strasbourg, France</h1>
+      <p class="lede">Alsace's storybook capital, where French and German culture blend into canals, timbered houses, and one of Europe's tallest Gothic cathedrals.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Petite France &mdash; the former Tanners' District, canals and timbered houses</li>
+<li>Strasbourg Cathedral &mdash; world's tallest building from 1647 to 1874</li>
+<li>Astronomical clock performance at solar noon (~12:30 PM)</li>
+<li>Place Kléber, the city's main square</li>
+<li>Alsatian lunch: tarte flambée (flammekueche)</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Strasbourg Highlights</h3>
+      <p class="tagline">Where Germany meets France to great effect</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>8:30 AM</div>
+        <div><b>End</b>12:30 PM</div>
+        <div><b>Duration</b>4 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Look up at the cathedral façade &mdash; the stone carving detail is extraordinary.</li>
+<li>If Christmas markets are open, Place Kléber is the main spot.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-4'>&larr; Day 4</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-6'>Day 6 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-6" data-tab="day-6">
+  <div class="band" style="background: linear-gradient(120deg, #1F6E6A, #57B0A6);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">06</div>
+      <div class="kicker">Fri, Nov 13 &middot; Rhine Port</div>
+      <h1>Speyer, Germany</h1>
+      <p class="lede">A lighter day in a town holding one of the largest Romanesque cathedrals in the world &mdash; a UNESCO World Heritage Site with eight emperors entombed inside.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Speyer Cathedral (Kaiserdom) &mdash; UNESCO World Heritage Site</li>
+<li>Crypts of Holy Roman Emperors beneath the cathedral</li>
+<li>Altpörtel (Old Gate) &mdash; last remains of the town fortifications</li>
+<li>Maximilianstrasse, the main pedestrian street</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Speyer Walking Tour</h3>
+      <p class="tagline">Explore Speyer's profound history and magnificent architecture</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>9:15 AM</div>
+        <div><b>End</b>12:15 PM</div>
+        <div><b>Duration</b>3 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>A lighter day for walking &mdash; only 3 hours total.</li>
+<li>Bring a light umbrella; Rhine valley weather in November is unpredictable.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-5'>&larr; Day 5</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-7'>Day 7 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-7" data-tab="day-7">
+  <div class="band" style="background: linear-gradient(120deg, #1F6E6A, #57B0A6);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M20 90 Q40 84 60 90 T100 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M48 90 L48 46 L60 34 L72 46 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 34 L60 26" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">07</div>
+      <div class="kicker">Sat, Nov 14 &middot; Rhine Port</div>
+      <h1>Mainz, Germany</h1>
+      <p class="lede">Gutenberg's city. A short morning tour covers 2,000 years of history, then the whole afternoon is free to rest or wander the Old Town.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Mainz Cathedral (St. Martin's) &mdash; over 1,000 years old</li>
+<li>Gutenberg Museum &mdash; original Gutenberg Bibles, printing history</li>
+<li>Chagall windows at St. Stephan's Church</li>
+<li>Old Town squares and fountains</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Mainz Walking Tour &amp; Gutenberg Museum</h3>
+      <p class="tagline">A soaring cathedral and an invention that changed the world</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>9:00 AM</div>
+        <div><b>End</b>11:00 AM</div>
+        <div><b>Duration</b>2 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Shortest tour of the cruise &mdash; a long free afternoon follows.</li>
+<li>Rest, lunch on board, or explore Mainz Old Town at your own pace.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-6'>&larr; Day 6</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-8'>Day 8 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-8" data-tab="day-8">
+  <div class="band" style="background: linear-gradient(120deg, #2B4A73, #6C8FB8);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M18 88 Q60 60 102 88" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M70 62 L78 38 L86 62" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M76 38 L76 30" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M20 94 Q60 84 100 94" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">08</div>
+      <div class="kicker">Sun, Nov 15 &middot; Scenic Sailing</div>
+      <h1>Middle Rhine, Koblenz &amp; Winningen</h1>
+      <p class="lede">The most scenic stretch of the whole cruise: a morning of castles gliding past on the Middle Rhine, then an afternoon where the Rhine meets the Moselle.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Middle Rhine Scenic Sailing &mdash; UNESCO World Heritage stretch</li>
+<li>Lorelei Rock, Marksburg Castle, Pfalzgrafenstein</li>
+<li>Deutsches Eck &mdash; confluence of the Rhine and Moselle</li>
+<li>Ehrenbreitstein Fortress (cable car), Koblenz Old Town</li>
+<li>Winningen &mdash; small Moselle wine village</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Historic Koblenz</h3>
+      <p class="tagline">Where two rivers and centuries of history converge</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>1:30 PM</div>
+        <div><b>End</b>3:30 PM</div>
+        <div><b>Duration</b>2 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Best scenic views are from the Sun Deck &mdash; bring warm layers.</li>
+<li>Morning is the scenic sailing; the Koblenz tour is in the afternoon.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-7'>&larr; Day 7</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-9'>Day 9 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-9" data-tab="day-9">
+  <div class="band" style="background: linear-gradient(120deg, #5C2436, #9E4A5C);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M22 60 L98 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M22 74 L98 58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M22 88 L98 72" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M72 44 L80 26 L88 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">09</div>
+      <div class="kicker">Mon, Nov 16 &middot; Moselle</div>
+      <h1>Cochem, Germany</h1>
+      <p class="lede">A fairytale Moselle village dominated by a hilltop castle, surrounded by some of the steepest vineyard terraces in the wine world.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Reichsburg Castle (Cochem Castle) &mdash; 1,000 years old, Gothic Revival restoration</li>
+<li>Old Town cobblestone streets, 15th-century St. Martin's Church</li>
+<li>Moselle wine country drive &amp; local winery visit</li>
+<li>Riesling tasting &mdash; the Moselle's world-renowned specialty</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Cochem, Reichsburg &amp; the Moselle Valley</h3>
+      <p class="tagline">A picturesque town crowned by a castle above the river</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>1:30 PM</div>
+        <div><b>End</b>6:00 PM</div>
+        <div><b>Duration</b>4.5 hrs</div>
+        <div><b>Pace</b>Moderate</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Eat a hearty lunch on board &mdash; wine tasting on an empty stomach is rough.</li>
+<li>The castle has stairs; grip-soled shoes help.</li>
+<li>Sunset is around 4:45 PM &mdash; best castle photos come early in the tour.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-8'>&larr; Day 8</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-10'>Day 10 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-10" data-tab="day-10">
+  <div class="band" style="background: linear-gradient(120deg, #5C2436, #9E4A5C);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M22 60 L98 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M22 74 L98 58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M22 88 L98 72" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M72 44 L80 26 L88 44" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">10</div>
+      <div class="kicker">Tue, Nov 17 &middot; Moselle</div>
+      <h1>Bernkastel &amp; Trier</h1>
+      <p class="lede">A free morning to wander Bernkastel's medieval Markt Square on your own, then an easy afternoon in Trier, Germany's oldest city.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Bernkastel Markt Square &mdash; one of Germany's most beautiful medieval squares</li>
+<li>Spitzhäuschen &mdash; the leaning house from 1416</li>
+<li>Porta Nigra &mdash; Roman city gate, UNESCO World Heritage Site</li>
+<li>Cathedral of Trier &mdash; Germany's oldest cathedral</li>
+<li>Roman amphitheater and the largest Roman baths north of the Alps</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Trier Highlights</h3>
+      <p class="tagline">A once-powerful Roman outpost &mdash; Germany's oldest city</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>1:30 PM</div>
+        <div><b>End</b>5:30 PM</div>
+        <div><b>Duration</b>4 hrs</div>
+        <div><b>Pace</b>Easy</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Morning in Bernkastel is free &mdash; no reserved tour, walk in on your own.</li>
+<li>Easiest pace of the whole cruise.</li>
+<li>Last dinner aboard tonight &mdash; pack a little before bed for tomorrow's transfer.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-9'>&larr; Day 9</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-11'>Day 11 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-11" data-tab="day-11">
+  <div class="band" style="background: linear-gradient(120deg, #6B4A2C, #B08249);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M36 90 L36 40 L48 40 L48 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M72 90 L72 40 L84 40 L84 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M48 90 L48 58 A12 14 0 0 1 72 58 L72 90" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">11</div>
+      <div class="kicker">Wed, Nov 18 &middot; Transfer Day</div>
+      <h1>Disembark Trier &rarr; Paris</h1>
+      <p class="lede">The longest day of the trip. Disembark in Trier, visit Reims Cathedral and the Luxembourg American Cemetery, then continue by motorcoach into Paris.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Luxembourg American Cemetery &mdash; resting place of Gen. George S. Patton</li>
+<li>Reims Cathedral &mdash; UNESCO World Heritage Site, coronation site of French kings</li>
+<li>Chagall-designed stained glass windows at Reims</li>
+<li>Free time in Reims &mdash; Champagne country</li>
+<li>Arrive Hyatt Regency Paris Étoile by evening</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Reims Cathedral &amp; Luxembourg American Cemetery</h3>
+      <p class="tagline">Stunning Gothic architecture and a poignant cemetery visit</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>9:00 AM</div>
+        <div><b>End</b>6:00 PM</div>
+        <div><b>Duration</b>9 hrs</div>
+        <div><b>Pace</b>Easy</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Longest day of the cruise &mdash; pack a small day bag; main luggage goes straight to the hotel.</li>
+<li>At the cemetery, please observe a moment of silence.</li>
+<li>Reims is the Champagne city &mdash; a tasting or bottle for the hotel is a lovely idea.</li>
+<li>Eat a real lunch in Reims; the ride to Paris afterward is long.</li></ul>
+      <div class="callout "><b>Hotel:</b> Hyatt Regency Paris Étoile, 3 Place du Général Koenig, 75017 Paris</div>
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-10'>&larr; Day 10</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-12'>Day 12 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-12" data-tab="day-12">
+  <div class="band" style="background: linear-gradient(120deg, #7A2E44, #C96A6E);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M60 26 L72 92 L64 92 L60 60 L56 92 L48 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M50 70 L70 70 M47 82 L73 82" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">12</div>
+      <div class="kicker">Thu, Nov 19 &middot; Paris</div>
+      <h1>Paris, France</h1>
+      <p class="lede">An included panoramic bus tour threads through Paris's greatest hits, then the afternoon is yours to slow down and explore on foot.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Drive along the Champs-Élysées and Arc de Triomphe</li>
+<li>Grand Palais, Petit Palais, Place de la Concorde</li>
+<li>Along the Seine to Île de la Cité and Notre-Dame's façade</li>
+<li>Latin Quarter, Luxembourg Gardens, Musée d'Orsay</li>
+<li>Les Invalides &mdash; Napoleon's Tomb</li></ul>
+      <div class="ticket">
+      <div class="ticket-tag">Reserved &middot; Included</div>
+      <h3>Panoramic Paris</h3>
+      <p class="tagline">A comprehensive and leisurely overview of the City of Light</p>
+      <div class="ticket-grid">
+        <div><b>Start</b>8:30 AM</div>
+        <div><b>End</b>12:30 PM</div>
+        <div><b>Duration</b>4 hrs</div>
+        <div><b>Pace</b>Easy</div>
+      </div>
+    </div>
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Mostly drive-by sightseeing &mdash; ask to be dropped in the city center instead of the hotel.</li>
+<li>Good day for a leisurely Parisian café lunch after the tour.</li>
+<li>Save the Eiffel Tower for tomorrow's sunset plan.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-11'>&larr; Day 11</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-13'>Day 13 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-13" data-tab="day-13">
+  <div class="band" style="background: linear-gradient(120deg, #7A2E44, #C96A6E);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M60 26 L72 92 L64 92 L60 60 L56 92 L48 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M50 70 L70 70 M47 82 L73 82" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">13</div>
+      <div class="kicker">Fri, Nov 20 &middot; Paris</div>
+      <h1>Iconic Paris</h1>
+      <p class="lede">The cruise package technically ends today, but you're extending through the 23rd. A full day of Paris icons, ending at Trocadéro for sunset over the Eiffel Tower.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Arc de Triomphe &mdash; climb to the top (284 steps) for a panoramic view</li>
+<li>Champs-Élysées, Place de la Concorde, the Egyptian Obelisk</li>
+<li>Tuileries Garden</li>
+<li>Trocadéro Plaza at sunset &mdash; the classic Eiffel Tower photo spot</li>
+<li>Hourly sparkle show, five minutes at the top of each hour</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Sleep in and have a late breakfast &mdash; day one of the extension should feel unhurried.</li>
+<li>Sunset is around 5:00 PM in November.</li>
+<li>Café de l'Homme on the Trocadéro side has a stunning tower view for dinner.</li></ul>
+      <div class="callout "><b>Confirmed:</b> Return flights (DL 229 / DL 369) are booked for Nov 23, matching the full Paris extension.</div>
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-12'>&larr; Day 12</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-14'>Day 14 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-14" data-tab="day-14">
+  <div class="band" style="background: linear-gradient(120deg, #2E2E5C, #6B5FA0);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M40 92 L40 42 L48 34 L48 92" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M72 92 L72 42 L80 34 L80 92" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<circle cx="60" cy="62" r="14" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.22"/>
+<circle cx="60" cy="62" r="6" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">14</div>
+      <div class="kicker">Sat, Nov 21 &middot; Paris</div>
+      <h1>Historic Paris</h1>
+      <p class="lede">Notre-Dame, Sainte-Chapelle, and the Marais &mdash; a day for the island at the heart of Paris, then an evening cruise on the Seine.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Notre-Dame Cathedral &mdash; reopened December 2024 after restoration</li>
+<li>Sainte-Chapelle &mdash; fifteen stained-glass windows in a single small chapel</li>
+<li>Île Saint-Louis, Berthillon ice cream</li>
+<li>The Marais &mdash; Place des Vosges, Paris's oldest square (1612)</li>
+<li>Evening Seine River cruise, about an hour, from Pont Neuf</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Book free timed-entry slots for Notre-Dame in advance at notredamedeparis.fr.</li>
+<li>Sainte-Chapelle entry is about &euro;13; the Seine cruise about &euro;16.</li></ul>
+      <div class="callout "><b>Still Deciding:</b> Chartres Cathedral, about an hour outside Paris, remains under consideration as a day trip in place of the plan above &mdash; it would preserve tomorrow's Sacré-Cœur Mass either way.</div>
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-13'>&larr; Day 13</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-15'>Day 15 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-15" data-tab="day-15">
+  <div class="band" style="background: linear-gradient(120deg, #8A5A18, #E4B84A);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M34 92 A26 24 0 0 1 86 92 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<circle cx="60" cy="56" r="14" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M60 42 L60 28" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M54 32 L66 32" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">15</div>
+      <div class="kicker">Sun, Nov 22 &middot; Paris</div>
+      <h1>Sacred Paris</h1>
+      <p class="lede">Montmartre and its basilica, the Miraculous Medal Chapel, and a farewell dinner with Rudy and Trining back at the Hyatt.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Sacré-Cœur Basilica &mdash; free entry, optional dome climb (~&euro;8)</li>
+<li>11:00 AM Solemn Mass at Sacré-Cœur with the famous choir</li>
+<li>Montmartre &mdash; Place du Tertre, Café des Deux Moulins (Amélie)</li>
+<li>Chapel of Our Lady of the Miraculous Medal, 140 Rue du Bac</li>
+<li>Evening: farewell dinner with Rudy &amp; Trining at the Hyatt</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Take the funicular up to Sacré-Cœur for &euro;2 if the stairs feel like a lot.</li>
+<li>La Maison Rose in Montmartre is a lovely, historic lunch stop.</li>
+<li>Rudy &amp; Trining return from Mont Saint-Michel that afternoon &mdash; plan the dinner meetup accordingly.</li></ul>
+      
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-14'>&larr; Day 14</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <button class='navbtn' data-goto='day-16'>Day 16 &rarr;</button>
+  </div>
+</section>
+<section class="panel" id="day-16" data-tab="day-16">
+  <div class="band" style="background: linear-gradient(120deg, #0B1730, #2B3A63);">
+    <div class="band-icon"><svg viewBox="0 0 120 120" width="220" height="220"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFFFFF" stroke-width="1.4" opacity="0.11"/>
+<path d="M28 70 L92 46" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 6" fill="none" opacity="0.132"/>
+<path d="M60 40 L96 52 L82 60 L68 56 Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/>
+<path d="M68 56 L58 72 L66 70 L74 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/></svg></div>
+    <div class="band-content">
+      <div class="daynum">16</div>
+      <div class="kicker">Mon, Nov 23 &middot; Travel Day</div>
+      <h1>Paris &rarr; San Diego</h1>
+      <p class="lede">Final breakfast at the Hyatt, then the long trip home &mdash; a quiet close to an unhurried trip.</p>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="col-main">
+      <h2>Highlights</h2>
+      <ul class="highlights"><li>Transfer to Charles de Gaulle Airport (CDG)</li>
+<li>Depart Paris (CDG) &rarr; San Diego (SAN), Economy</li>
+<li>Arrive San Diego International Airport</li></ul>
+      
+    </div>
+    <div class="col-side">
+      <h2>Tips &amp; Notes</h2>
+      <ul class="tips"><li>Allow plenty of time at CDG &mdash; arrive 3 hours before an international flight.</li>
+<li>Taxi to CDG runs about &euro;55, or use the arranged transfer.</li></ul>
+      <div class="callout "><b>Confirmed:</b> Return flights (DL 229 / DL 369) depart CDG on Nov 23, arriving San Diego the same day.</div>
+    </div>
+  </div>
+
+  <div class="panelnav">
+    <button class='navbtn' data-goto='day-15'>&larr; Day 15</button>
+    <button class="navbtn ghost" data-goto="overview">All Days</button>
+    <span></span>
+  </div>
+</section>
+
+  <section class="panel" id="practical" data-tab="practical">
+    <h1 style="font-family:'Fraunces',serif; font-size:30px; margin-bottom:6px;">Trip Essentials</h1>
+    <p class="lede" style="margin-bottom:20px;">Everything else worth having on hand.</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Booking</h3>
+        <ul>
+          <li>Ship: Viking Freya</li>
+          <li>Embark: Basel, Wed Nov 11, 3:00 PM</li>
+          <li>Disembark: Trier, Wed Nov 18</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hotels</h3>
+        <ul>
+          <li>Renaissance Z&uuml;rich Tower Hotel (Nov 9&ndash;11)<br>Turbinenstrasse 20, 8005 Z&uuml;rich</li>
+          <li>Hyatt Regency Paris &Eacute;toile (Nov 18&ndash;23)<br>3 Place du G&eacute;n&eacute;ral Koenig, 75017 Paris</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Currency &amp; Tipping</h3>
+        <ul>
+          <li>Switzerland: Swiss Francs (CHF) only</li>
+          <li>Germany &amp; France: Euros (&euro;)</li>
+          <li>Ship gratuities: ~$18/pp/day, prepaid recommended</li>
+          <li>France: service included by law; 5&ndash;10% extra is generous</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Weather (Mid&ndash;Late Nov)</h3>
+        <ul>
+          <li>Switzerland: 35&ndash;45&deg;F, possible snow at elevation</li>
+          <li>Rhine/Germany: 38&ndash;48&deg;F, often gray and damp</li>
+          <li>Paris: 40&ndash;50&deg;F, rain possible most days</li>
+          <li>Pack layers, a waterproof jacket, broken-in walking shoes</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Key Contacts</h3>
+        <ul>
+          <li>Donna Fontenot, Pavlus Travel<br>donnad@pavlustravel.com &middot; +1 (866) 811-1360</li>
+          <li>Pavlus Guest Relations: 1-866-843-4836</li>
+          <li>Viking Customer Service: 1-877-668-4546</li>
+          <li>Frank To, AAA Travel<br>+1 (619) 681-1571</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Documents</h3>
+        <ul>
+          <li>U.S. Passport valid through at least May 2027</li>
+          <li>Allianz AllTrips Premier travel insurance</li>
+          <li>Printed Viking booking &amp; hotel confirmations</li>
+          <li>European 2-prong plug adapters</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:22px;">
+      <b>Confirmed:</b> Return flights (DL 229 / DL 369) are booked for Nov 23, matching the full Paris extension &mdash; no further action needed.
+    </div>
+  </section>
+
+</div>
+
+<footer class="sitefoot">
+  A Guide for the GSP Flock &middot; Z&uuml;rich to Paris &middot; November 2026<br>
+  Safe travels &mdash; enjoy every minute.<br>
+  <span class="maintainer">This page is managed and kept up to date by your trip coordinator.</span>
+</footer>
+
+<script>
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.chip, .overview-chip').forEach(function(c){ c.classList.remove('active'); });
+  var panel = document.getElementById(id);
+  if(panel){ panel.classList.add('active'); }
+  var trigger = document.querySelector('[data-goto="'+id+'"]');
+  if(trigger && (trigger.classList.contains('chip') || trigger.classList.contains('overview-chip'))){
+    trigger.classList.add('active');
+  }
+  try { window.scrollTo(0, 0); } catch(e) {}
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-goto]');
+  if(t){
+    e.preventDefault();
+    showTab(t.getAttribute('data-goto'));
+  }
+});
+
+(function(){
+  try {
+    var target = new Date(2026, 10, 8); // November 8, 2026 (month is 0-indexed)
+    target.setHours(0,0,0,0);
+    var now = new Date();
+    now.setHours(0,0,0,0);
+    var diffDays = Math.round((target - now) / 86400000);
+
+    var numEl = document.getElementById('countdown-number');
+    var labelEl = document.getElementById('countdown-label');
+    if(numEl && labelEl){
+      if(diffDays > 1){
+        numEl.textContent = diffDays;
+        labelEl.textContent = 'days to Zürich!';
+      } else if(diffDays === 1){
+        numEl.textContent = '1';
+        labelEl.textContent = 'day to Zürich!';
+      } else if(diffDays === 0){
+        numEl.textContent = '✈';
+        labelEl.textContent = 'Today’s the day!';
+      } else {
+        numEl.textContent = '✓';
+        labelEl.textContent = 'Bon voyage — underway!';
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
